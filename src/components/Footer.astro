@@ -1,0 +1,231 @@
+---
+// src/components/Footer.astro
+// ============================================================
+// Footer MangkokKecil dengan link navigasi, sosmed, & newsletter
+// ============================================================
+---
+
+<footer class="bg-brand-text dark:bg-gray-950 text-white pt-16 pb-8 mt-16" role="contentinfo">
+  <div class="container-custom">
+    
+    <!-- ===== GRID FOOTER ===== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      
+      <!-- Kolom 1: Brand -->
+      <div class="lg:col-span-1">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2 mb-4 group" aria-label="MangkokKecil">
+          <div class="w-10 h-10 rounded-2xl bg-brand-cta flex items-center justify-center text-xl
+                      group-hover:scale-110 transition-transform">
+            🥣
+          </div>
+          <span class="font-display font-extrabold text-xl">
+            Mangkok<span class="text-brand-cta">Kecil</span>
+          </span>
+        </a>
+
+        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+          Panduan MPASI terpercaya sesuai standar WHO/IDAI untuk ibu-ibu Indonesia. 
+          Dari resep hingga tips GTM, semua ada di sini! 💛
+        </p>
+
+        <!-- Social Media Links -->
+        <div class="flex items-center gap-3">
+          <!-- Instagram -->
+          <a
+            href="https://instagram.com/mangkokkecil"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-9 h-9 rounded-xl bg-white/10 hover:bg-brand-cta hover:text-brand-text
+                   flex items-center justify-center transition-all duration-200"
+            aria-label="Instagram MangkokKecil"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+          <!-- TikTok -->
+          <a
+            href="https://tiktok.com/@mangkokkecil"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-9 h-9 rounded-xl bg-white/10 hover:bg-brand-cta hover:text-brand-text
+                   flex items-center justify-center transition-all duration-200"
+            aria-label="TikTok MangkokKecil"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.71a8.18 8.18 0 0 0 4.78 1.52V6.78a4.85 4.85 0 0 1-1.01-.09z"/>
+            </svg>
+          </a>
+          <!-- YouTube -->
+          <a
+            href="https://youtube.com/@mangkokkecil"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-9 h-9 rounded-xl bg-white/10 hover:bg-brand-cta hover:text-brand-text
+                   flex items-center justify-center transition-all duration-200"
+            aria-label="YouTube MangkokKecil"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+              <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Kolom 2: Topik Blog -->
+      <div>
+        <h3 class="font-display font-bold text-white mb-4 text-sm uppercase tracking-wide">
+          Topik Blog
+        </h3>
+        <ul class="space-y-2.5" role="list">
+          {[
+            { label: 'Resep MPASI', href: '/blog?tag=Resep+MPASI' },
+            { label: 'MPASI 6 Bulan', href: '/blog?tag=MPASI+6+Bulan' },
+            { label: 'Panduan Gizi', href: '/blog?tag=Panduan+Gizi' },
+            { label: 'Mengatasi GTM', href: '/blog?tag=GTM' },
+            { label: 'BLW & Metode Makan', href: '/blog?tag=BLW' },
+            { label: 'Perlengkapan MPASI', href: '/blog?tag=Perlengkapan' },
+            { label: 'Meal Prep', href: '/blog?tag=Meal+Prep' },
+          ].map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-gray-400 hover:text-brand-cta text-sm transition-colors flex items-center gap-2"
+              >
+                <span class="w-1 h-1 rounded-full bg-brand-cta/50 flex-shrink-0"></span>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Kolom 3: Halaman -->
+      <div>
+        <h3 class="font-display font-bold text-white mb-4 text-sm uppercase tracking-wide">
+          Navigasi
+        </h3>
+        <ul class="space-y-2.5" role="list">
+          {[
+            { label: '🏠 Beranda', href: '/' },
+            { label: '📝 Blog MPASI', href: '/blog' },
+            { label: '📖 Panduan MPASI', href: '/panduan' },
+            { label: 'ℹ️ Tentang Kami', href: '/tentang' },
+            { label: '📧 Kontak', href: '/kontak' },
+          ].map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-gray-400 hover:text-brand-cta text-sm transition-colors"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <!-- Legal links -->
+        <div class="mt-6 pt-6 border-t border-white/10">
+          <ul class="space-y-2" role="list">
+            {[
+              { label: 'Kebijakan Privasi', href: '/privacy' },
+              { label: 'Syarat & Ketentuan', href: '/terms' },
+              { label: 'Disclaimer', href: '/disclaimer' },
+            ].map((link) => (
+              <li>
+                <a href={link.href} class="text-gray-500 hover:text-gray-300 text-xs transition-colors">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <!-- Kolom 4: Newsletter -->
+      <div>
+        <h3 class="font-display font-bold text-white mb-2 text-sm uppercase tracking-wide">
+          Tips MPASI ke Inbox Kamu
+        </h3>
+        <p class="text-gray-400 text-sm mb-4">
+          Daftar dan dapatkan panduan MPASI gratis + tips mingguan langsung di email kamu!
+        </p>
+
+        <!-- Form Newsletter -->
+        <form class="flex flex-col gap-3" aria-label="Formulir newsletter">
+          <div>
+            <label for="newsletter-email" class="sr-only">Alamat email</label>
+            <input
+              id="newsletter-email"
+              type="email"
+              placeholder="email@kamu.com"
+              required
+              class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20
+                     text-white placeholder-gray-500 text-sm
+                     focus:outline-none focus:border-brand-cta focus:bg-white/15
+                     transition-all duration-200"
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn-primary justify-center text-sm py-3"
+          >
+            ✉️ Daftar Gratis
+          </button>
+        </form>
+
+        <!-- Trust indicators -->
+        <p class="text-gray-500 text-xs mt-3 flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          Gratis. Tanpa spam. Bisa unsubscribe kapan saja.
+        </p>
+      </div>
+    </div>
+
+    <!-- ===== BOTTOM BAR ===== -->
+    <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-gray-500 text-sm text-center sm:text-left">
+        &copy; {new Date().getFullYear()} MangkokKecil. Dibuat dengan 💛 untuk semua ibu hebat Indonesia.
+      </p>
+      <p class="text-gray-600 text-xs text-center sm:text-right">
+        Konten kami bersifat informatif, bukan pengganti saran medis profesional.
+        Selalu konsultasikan dengan dokter anak Anda.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to Top Button -->
+<button
+  id="scroll-top"
+  class="scroll-top-btn"
+  aria-label="Kembali ke atas"
+  title="Kembali ke atas"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+    <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+  </svg>
+</button>
+
+<script>
+  // Scroll to top button
+  const scrollTopBtn = document.getElementById('scroll-top');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      scrollTopBtn?.classList.add('visible');
+    } else {
+      scrollTopBtn?.classList.remove('visible');
+    }
+  }, { passive: true });
+
+  scrollTopBtn?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>

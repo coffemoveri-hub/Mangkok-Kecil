@@ -1,0 +1,274 @@
+---
+// src/pages/index.astro
+// ============================================================
+// Homepage MangkokKecil
+// Berisi: Hero, Features, Blog Terbaru, CTA
+// ============================================================
+
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import BlogCard from '../components/BlogCard.astro';
+import { getLatestPosts } from '../lib/notion';
+
+// Ambil 3 post terbaru dari Notion
+const latestPosts = await getLatestPosts(3);
+
+// SEO: Homepage
+const seoTitle = 'MangkokKecil - Blog MPASI Terpercaya untuk Ibu & Bayi';
+const seoDescription = 'Panduan MPASI lengkap sesuai WHO & IDAI: resep puree bayi 6 bulan, tips mengatasi GTM, meal prep ibu bekerja, review perlengkapan MPASI, dan edukasi gizi untuk tumbuh kembang optimal si Kecil.';
+
+// Data fitur unggulan (Why Choose Us)
+const features = [
+  {
+    icon: '🔬',
+    title: 'Berdasarkan Riset & Standar WHO/IDAI',
+    description: 'Setiap konten kami dikurasi dan divalidasi mengacu pada pedoman nutrisi bayi terbaru dari WHO dan Ikatan Dokter Anak Indonesia (IDAI).',
+    color: 'bg-brand-highlight/15 dark:bg-brand-highlight/10',
+    border: 'border-brand-highlight/30',
+  },
+  {
+    icon: '👩‍🍳',
+    title: 'Resep Praktis & Bergizi Tinggi',
+    description: 'Ratusan resep MPASI yang sudah teruji, mulai dari puree halus 6 bulan hingga menu keluarga padat gizi yang menarik dan mudah dibuat.',
+    color: 'bg-brand-cta/10 dark:bg-brand-cta/5',
+    border: 'border-brand-cta/30',
+  },
+  {
+    icon: '💪',
+    title: 'Solusi GTM & Picky Eater',
+    description: 'Panduan praktis mengatasi Gerakan Tutup Mulut yang frustasi. Teknik feeding rules, kreasi menu tinggi kalori, dan strategi makan yang fun.',
+    color: 'bg-sage-100 dark:bg-sage-100/10',
+    border: 'border-sage-300/30',
+  },
+];
+
+// Data topik populer
+const popularTopics = [
+  { emoji: '🍲', label: 'Resep MPASI', count: '45 artikel', href: '/blog?tag=Resep+MPASI' },
+  { emoji: '👶', label: 'MPASI 6 Bulan', count: '20 artikel', href: '/blog?tag=MPASI+6+Bulan' },
+  { emoji: '😤', label: 'Atasi GTM', count: '18 artikel', href: '/blog?tag=GTM' },
+  { emoji: '🤲', label: 'Baby-Led Weaning', count: '12 artikel', href: '/blog?tag=BLW' },
+  { emoji: '🍱', label: 'Meal Prep', count: '15 artikel', href: '/blog?tag=Meal+Prep' },
+  { emoji: '⭐', label: 'Review Produk', count: '10 artikel', href: '/blog?tag=Review+Produk' },
+];
+
+// Testimoni singkat
+const testimonials = [
+  {
+    quote: 'MangkokKecil jadi penyelamat saya waktu anak mulai GTM di usia 9 bulan. Resep-resepnya praktis banget!',
+    name: 'Rizka, Mama Raka (10 bulan)',
+    avatar: '👩',
+  },
+  {
+    quote: 'Akhirnya nemu blog MPASI yang beneran based on evidence, bukan mitos. Makasih MangkokKecil! 💛',
+    name: 'Dewi, Ibu Bekerja',
+    avatar: '👩‍💼',
+  },
+  {
+    quote: 'Panduan meal prep-nya super helpful. Hemat waktu banget, nutrisi anak tetap terjaga meski saya kerja full time.',
+    name: 'Sari, Mama Keira (8 bulan)',
+    avatar: '👩‍🍳',
+  },
+];
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  type="website"
+>
+  <!-- ===== HERO SECTION ===== -->
+  <Hero />
+
+  <!-- ===== FITUR UNGGULAN / WHY CHOOSE US ===== -->
+  <section class="section bg-white dark:bg-gray-900" aria-labelledby="features-heading">
+    <div class="container-custom">
+      
+      <!-- Section header -->
+      <div class="text-center mb-12 md:mb-16">
+        <span class="tag bg-brand-cta/10 text-brand-cta mb-4 inline-block">
+          ✨ Kenapa MangkokKecil?
+        </span>
+        <h2 class="section-title" id="features-heading">
+          Lebih dari Sekadar Blog MPASI
+        </h2>
+        <p class="section-subtitle max-w-2xl mx-auto">
+          Kami hadir sebagai teman perjalanan yang bisa dipercaya, bukan hanya penyedia konten.
+          Karena setiap ibu berhak mendapatkan informasi terbaik untuk buah hatinya.
+        </p>
+      </div>
+
+      <!-- Feature cards grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        {features.map((feature, i) => (
+          <div
+            class={`feature-card border ${feature.border} animate-on-scroll`}
+            style={`animation-delay: ${i * 0.15}s`}
+          >
+            <!-- Icon -->
+            <div class={`w-14 h-14 rounded-2xl ${feature.color} flex items-center justify-center text-2xl mb-5`}>
+              {feature.icon}
+            </div>
+
+            <!-- Title (H3) -->
+            <h3 class="font-display font-bold text-lg text-brand-text dark:text-white mb-3">
+              {feature.title}
+            </h3>
+
+            <!-- Description -->
+            <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+              {feature.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TOPIK POPULER ===== -->
+  <section class="section bg-brand-bg dark:bg-gray-950" aria-labelledby="topics-heading">
+    <div class="container-custom">
+      <div class="text-center mb-10">
+        <h2 class="font-display font-bold text-2xl md:text-3xl text-brand-text dark:text-white mb-3" id="topics-heading">
+          Jelajahi Topik Favoritmu 🔍
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Cari informasi MPASI sesuai kebutuhan si Kecil</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+        {popularTopics.map((topic, i) => (
+          <a
+            href={topic.href}
+            class="group bg-white dark:bg-gray-800 rounded-2xl p-4 text-center
+                   hover:bg-brand-cta hover:text-brand-text
+                   border border-gray-100 dark:border-gray-700
+                   hover:border-brand-cta hover:shadow-cta
+                   transition-all duration-200 animate-on-scroll"
+            style={`animation-delay: ${i * 0.08}s`}
+          >
+            <div class="text-3xl mb-2">{topic.emoji}</div>
+            <p class="font-semibold text-sm text-brand-text dark:text-white group-hover:text-brand-text">{topic.label}</p>
+            <p class="text-xs text-gray-400 group-hover:text-brand-text/70 mt-0.5">{topic.count}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BLOG TERBARU ===== -->
+  <section class="section bg-white dark:bg-gray-900" aria-labelledby="latest-posts-heading">
+    <div class="container-custom">
+      
+      <!-- Section header -->
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <div>
+          <span class="tag bg-brand-highlight/20 text-teal-700 dark:text-teal-300 mb-3 inline-block">
+            📰 Artikel Terbaru
+          </span>
+          <h2 class="section-title" id="latest-posts-heading">
+            Baca Artikel Terpopuler
+          </h2>
+        </div>
+        <a href="/blog" class="btn-outline flex-shrink-0">
+          Lihat semua artikel →
+        </a>
+      </div>
+
+      <!-- Blog cards grid -->
+      {latestPosts.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {latestPosts.map((post, i) => (
+            <BlogCard post={post} index={i} />
+          ))}
+        </div>
+      ) : (
+        <!-- Placeholder saat belum ada artikel -->
+        <div class="text-center py-16 bg-brand-card dark:bg-gray-800 rounded-3xl">
+          <span class="text-5xl mb-4 block">🥣</span>
+          <p class="text-gray-500 dark:text-gray-400">Artikel sedang disiapkan...</p>
+          <p class="text-sm text-gray-400 mt-2">Setup Notion CMS terlebih dahulu untuk melihat artikel di sini.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIAL ===== -->
+  <section class="section bg-brand-bg dark:bg-gray-950" aria-labelledby="testimonials-heading">
+    <div class="container-custom">
+      <div class="text-center mb-10">
+        <h2 class="font-display font-bold text-2xl md:text-3xl text-brand-text dark:text-white mb-2" id="testimonials-heading">
+          Kata Ibu-Ibu Hebat Indonesia 💛
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {testimonials.map((t, i) => (
+          <div
+            class="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-100 dark:border-gray-700 shadow-card animate-on-scroll"
+            style={`animation-delay: ${i * 0.1}s`}
+          >
+            <!-- Quote icon -->
+            <div class="text-brand-cta text-3xl mb-3 leading-none">"</div>
+            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 italic">
+              {t.quote}
+            </p>
+            <div class="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <div class="w-8 h-8 rounded-full bg-brand-cta/10 flex items-center justify-center text-lg">
+                {t.avatar}
+              </div>
+              <p class="text-xs font-semibold text-brand-text dark:text-gray-200">{t.name}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA SECTION ===== -->
+  <section class="section" aria-labelledby="cta-heading">
+    <div class="container-custom">
+      <div class="cta-section">
+        <div class="relative z-10">
+          <!-- Emoji -->
+          <div class="text-5xl mb-4 animate-bounce-soft" role="img" aria-label="Mangkok makanan bayi">🍜</div>
+
+          <!-- Heading -->
+          <h2 class="font-display font-extrabold text-2xl md:text-3xl lg:text-4xl text-brand-text mb-4 max-w-3xl mx-auto leading-tight" id="cta-heading">
+            Setiap ibu pasti pernah frustasi menghadapi fase GTM.
+          </h2>
+
+          <!-- CTA Text -->
+          <p class="text-brand-text/80 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+            Apa menu penyelamat andalan Ibu saat si Kecil menolak makan? 
+            <strong>Bagikan cerita dan resep rahasia Ibu di kolom komentar, yuk!</strong>
+          </p>
+
+          <!-- Action buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/blog?tag=GTM"
+              class="inline-flex items-center justify-center gap-2
+                     bg-brand-text text-white font-bold px-8 py-4 rounded-2xl
+                     hover:bg-brand-text/90 transition-all duration-200 shadow-lg
+                     text-sm md:text-base"
+              id="cta-gtm-articles"
+            >
+              😤 Baca Artikel GTM
+            </a>
+            <a
+              href="/blog"
+              class="inline-flex items-center justify-center gap-2
+                     bg-white/80 text-brand-text font-bold px-8 py-4 rounded-2xl
+                     hover:bg-white transition-all duration-200 shadow-md
+                     text-sm md:text-base"
+              id="cta-share-recipe"
+            >
+              🍲 Bagikan Resep Kamu
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>

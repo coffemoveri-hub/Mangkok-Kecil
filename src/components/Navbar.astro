@@ -1,0 +1,217 @@
+---
+// src/components/Navbar.astro
+// ============================================================
+// Komponen navigasi utama MangkokKecil
+// Fitur: sticky, dark/light toggle, mobile menu
+// ============================================================
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const navItems = [
+  { label: 'Beranda', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Tentang Kami', href: '/tentang' },
+  { label: 'Panduan MPASI', href: '/panduan' },
+  { label: 'Kontak', href: '/kontak' },
+];
+
+const isActive = (href: string) => {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+};
+---
+
+<header class="navbar" id="navbar" role="banner">
+  <div class="container-custom">
+    <nav class="flex items-center justify-between h-16 md:h-20" aria-label="Navigasi utama">
+      
+      <!-- ===== LOGO ===== -->
+      <a href="/" class="flex items-center gap-2 group" aria-label="MangkokKecil - Beranda">
+        <!-- Logo icon (mangkok kecil dengan emoji) -->
+        <div class="w-9 h-9 md:w-10 md:h-10 rounded-2xl bg-gradient-to-br from-brand-cta to-amber-400 
+                    flex items-center justify-center text-lg shadow-md
+                    group-hover:scale-110 transition-transform duration-200">
+          🥣
+        </div>
+        <div>
+          <span class="font-display font-extrabold text-lg md:text-xl text-brand-text dark:text-white leading-none">
+            Mangkok<span class="text-brand-cta">Kecil</span>
+          </span>
+          <p class="text-xs text-gray-400 leading-none hidden sm:block">Panduan MPASI Terpercaya</p>
+        </div>
+      </a>
+
+      <!-- ===== DESKTOP NAVIGATION ===== -->
+      <ul class="hidden md:flex items-center gap-1" role="list">
+        {navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class={`nav-link ${isActive(item.href) ? 'active text-brand-cta' : ''}`}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <!-- ===== RIGHT SIDE ACTIONS ===== -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Dark/Light Mode Toggle -->
+        <button
+          id="dark-mode-toggle"
+          class="w-10 h-10 rounded-xl flex items-center justify-center
+                 bg-gray-100 dark:bg-gray-800 hover:bg-brand-card dark:hover:bg-gray-700
+                 transition-all duration-200 text-gray-600 dark:text-gray-300"
+          aria-label="Toggle dark mode"
+          title="Ganti tema"
+        >
+          <!-- Sun icon (ditampilkan saat dark mode) -->
+          <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <!-- Moon icon (ditampilkan saat light mode) -->
+          <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+
+        <!-- CTA Button (Desktop) -->
+        <a
+          href="/blog"
+          class="hidden md:inline-flex btn-primary text-sm px-4 py-2.5"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+          </svg>
+          Baca Blog
+        </a>
+
+        <!-- Mobile Hamburger Button -->
+        <button
+          id="mobile-menu-toggle"
+          class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center
+                 bg-gray-100 dark:bg-gray-800 hover:bg-brand-card
+                 transition-all duration-200"
+          aria-label="Buka menu navigasi"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <!-- Hamburger icon -->
+          <div id="hamburger-icon" class="flex flex-col gap-1.5 w-5">
+            <span class="block h-0.5 w-5 bg-brand-text dark:bg-gray-200 rounded transition-all duration-300"></span>
+            <span class="block h-0.5 w-4 bg-brand-text dark:bg-gray-200 rounded transition-all duration-300"></span>
+            <span class="block h-0.5 w-5 bg-brand-text dark:bg-gray-200 rounded transition-all duration-300"></span>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===== MOBILE MENU ===== -->
+    <div
+      id="mobile-menu"
+      class="md:hidden hidden pb-4 border-t border-gray-100 dark:border-gray-800 mt-1"
+      role="navigation"
+      aria-label="Menu mobile"
+    >
+      <ul class="flex flex-col gap-1 pt-3" role="list">
+        {navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class={`block px-4 py-3 rounded-xl font-medium text-sm transition-colors
+                      ${isActive(item.href) 
+                        ? 'bg-brand-cta/10 text-brand-cta font-semibold' 
+                        : 'text-brand-text dark:text-gray-200 hover:bg-brand-card dark:hover:bg-gray-800'
+                      }`}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <!-- CTA di mobile -->
+        <li class="pt-2">
+          <a href="/blog" class="btn-primary w-full justify-center text-sm">
+            🍼 Baca Blog MPASI
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<!-- Script untuk navbar interaksi -->
+<script>
+  // ===== DARK MODE TOGGLE =====
+  const darkToggle = document.getElementById('dark-mode-toggle');
+  const html = document.documentElement;
+
+  // Cek preferensi tersimpan
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    html.classList.add('dark');
+  }
+
+  darkToggle?.addEventListener('click', () => {
+    html.classList.toggle('dark');
+    localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  // ===== MOBILE MENU TOGGLE =====
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const hamburgerLines = document.querySelectorAll('#hamburger-icon span');
+
+  mobileToggle?.addEventListener('click', () => {
+    const isOpen = !mobileMenu?.classList.contains('hidden');
+    
+    if (isOpen) {
+      mobileMenu?.classList.add('hidden');
+      mobileToggle.setAttribute('aria-expanded', 'false');
+      // Reset hamburger
+      hamburgerLines[0]?.classList.remove('rotate-45', 'translate-y-2');
+      hamburgerLines[1]?.classList.remove('opacity-0');
+      hamburgerLines[2]?.classList.remove('-rotate-45', '-translate-y-2');
+    } else {
+      mobileMenu?.classList.remove('hidden');
+      mobileToggle.setAttribute('aria-expanded', 'true');
+      // Animate ke X
+      hamburgerLines[0]?.classList.add('rotate-45', 'translate-y-2');
+      hamburgerLines[1]?.classList.add('opacity-0');
+      hamburgerLines[2]?.classList.add('-rotate-45', '-translate-y-2');
+    }
+  });
+
+  // ===== NAVBAR SCROLL EFFECT =====
+  const navbar = document.getElementById('navbar');
+  
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      navbar?.classList.add('scrolled');
+    } else {
+      navbar?.classList.remove('scrolled');
+    }
+  }, { passive: true });
+
+  // Tutup mobile menu ketika klik di luar
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (!navbar?.contains(target)) {
+      mobileMenu?.classList.add('hidden');
+      mobileToggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>

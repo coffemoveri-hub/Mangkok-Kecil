@@ -1,0 +1,118 @@
+---
+// src/layouts/Layout.astro
+// ============================================================
+// Layout utama MangkokKecil - dipakai di semua halaman
+// Berisi: Navbar, SEO, Footer, global styles
+// ============================================================
+
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import SEO from '../components/SEO.astro';
+import '../styles/global.css';
+
+interface Props {
+  // SEO props
+  title: string;
+  description: string;
+  image?: string;
+  canonical?: string;
+  type?: 'website' | 'article';
+  author?: string;
+  datePublished?: string;
+  dateModified?: string;
+  tags?: string[];
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description,
+  image,
+  canonical,
+  type = 'website',
+  author,
+  datePublished,
+  dateModified,
+  tags,
+  noIndex,
+} = Astro.props;
+
+// Untuk active link di Navbar
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="id" class="">
+  <head>
+    <!-- ===== SEO Component ===== -->
+    <SEO
+      title={title}
+      description={description}
+      image={image}
+      canonical={canonical}
+      type={type}
+      author={author}
+      datePublished={datePublished}
+      dateModified={dateModified}
+      tags={tags}
+      noIndex={noIndex}
+    />
+  </head>
+
+  <body class="bg-brand-bg dark:bg-gray-900 transition-colors duration-300">
+    <!-- Skip to main content (aksesibilitas) -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4
+             focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-cta focus:text-brand-text
+             focus:font-bold focus:rounded-xl"
+    >
+      Lewati ke konten utama
+    </a>
+
+    <!-- ===== NAVBAR ===== -->
+    <Navbar currentPath={currentPath} />
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <Footer />
+
+    <!-- ===== GLOBAL SCRIPTS ===== -->
+    <script>
+      // Initialize dark mode dari localStorage
+      // (Script ini dijalankan SEBELUM render untuk mencegah flash)
+      (function() {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+
+      // Animasi scroll untuk elemen dengan class animate-on-scroll
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+              }
+            });
+          },
+          { 
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px' 
+          }
+        );
+
+        document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+          observer.observe(el);
+        });
+      });
+    </script>
+  </body>
+</html>

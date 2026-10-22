@@ -1,0 +1,205 @@
+---
+// src/pages/kontak.astro
+// ============================================================
+// Halaman Kontak - MangkokKecil
+// ============================================================
+
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Kontak Kami | MangkokKecil"
+  description="Hubungi tim MangkokKecil untuk pertanyaan, kolaborasi, atau berbagi cerita MPASI. Kami senang mendengar dari ibu-ibu Indonesia!"
+>
+  <div class="bg-gradient-to-b from-brand-card to-white dark:from-gray-800 dark:to-gray-900 pt-28 pb-16">
+    <div class="container-custom max-w-3xl text-center">
+      <div class="text-6xl mb-6">📧</div>
+      <h1 class="section-title mb-4">Hubungi <span class="text-gradient">Kami</span></h1>
+      <p class="section-subtitle">
+        Ada pertanyaan? Mau kolaborasi? Atau sekadar ingin berbagi cerita MPASI?
+        Kami dengan senang hati mendengarkan!
+      </p>
+    </div>
+  </div>
+
+  <div class="container-custom max-w-4xl py-12 md:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      
+      <!-- Info Kontak -->
+      <div class="space-y-6">
+        <h2 class="font-display font-bold text-xl text-brand-text dark:text-white">
+          Info Kontak
+        </h2>
+        
+        {[
+          {
+            icon: '📧',
+            title: 'Email',
+            value: 'halo@mangkokkecil.com',
+            href: 'mailto:halo@mangkokkecil.com',
+          },
+          {
+            icon: '📱',
+            title: 'Instagram',
+            value: '@mangkokkecil',
+            href: 'https://instagram.com/mangkokkecil',
+          },
+          {
+            icon: '🎵',
+            title: 'TikTok',
+            value: '@mangkokkecil',
+            href: 'https://tiktok.com/@mangkokkecil',
+          },
+        ].map((contact) => (
+          <div class="flex items-start gap-4 p-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-card">
+            <div class="text-3xl">{contact.icon}</div>
+            <div>
+              <p class="text-xs text-gray-400 uppercase tracking-wide font-medium">{contact.title}</p>
+              <a
+                href={contact.href}
+                target={contact.href.startsWith('mailto:') ? undefined : '_blank'}
+                rel={contact.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                class="font-semibold text-brand-cta hover:underline"
+              >
+                {contact.value}
+              </a>
+            </div>
+          </div>
+        ))}
+
+        <!-- Response time -->
+        <div class="bg-sage-100 dark:bg-gray-800 rounded-2xl p-4 border border-sage-200 dark:border-gray-700">
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            ⏰ <strong>Waktu Respon:</strong> Biasanya kami membalas dalam 1-2 hari kerja.
+            Untuk pertanyaan umum MPASI, cek dulu artikel kami ya!
+          </p>
+        </div>
+      </div>
+
+      <!-- Form Kontak -->
+      <div class="lg:col-span-2">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-card border border-gray-100 dark:border-gray-700">
+          <h2 class="font-display font-bold text-xl text-brand-text dark:text-white mb-6">
+            Kirim Pesan
+          </h2>
+          
+          <form
+            id="contact-form"
+            class="space-y-5"
+            aria-label="Formulir kontak MangkokKecil"
+          >
+            <!-- Nama -->
+            <div>
+              <label for="contact-name" class="block text-sm font-semibold text-brand-text dark:text-gray-200 mb-2">
+                Nama Lengkap *
+              </label>
+              <input
+                id="contact-name"
+                type="text"
+                required
+                placeholder="Nama kamu"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600
+                       bg-gray-50 dark:bg-gray-700 text-brand-text dark:text-gray-200
+                       focus:outline-none focus:border-brand-cta focus:bg-white dark:focus:bg-gray-600
+                       transition-all text-sm"
+              />
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label for="contact-email" class="block text-sm font-semibold text-brand-text dark:text-gray-200 mb-2">
+                Email *
+              </label>
+              <input
+                id="contact-email"
+                type="email"
+                required
+                placeholder="email@kamu.com"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600
+                       bg-gray-50 dark:bg-gray-700 text-brand-text dark:text-gray-200
+                       focus:outline-none focus:border-brand-cta focus:bg-white dark:focus:bg-gray-600
+                       transition-all text-sm"
+              />
+            </div>
+
+            <!-- Topik -->
+            <div>
+              <label for="contact-topic" class="block text-sm font-semibold text-brand-text dark:text-gray-200 mb-2">
+                Topik Pesan
+              </label>
+              <select
+                id="contact-topic"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600
+                       bg-gray-50 dark:bg-gray-700 text-brand-text dark:text-gray-200
+                       focus:outline-none focus:border-brand-cta
+                       transition-all text-sm"
+              >
+                <option value="">Pilih topik...</option>
+                <option value="pertanyaan">Pertanyaan Seputar MPASI</option>
+                <option value="kolaborasi">Kolaborasi / Partnership</option>
+                <option value="iklan">Pemasangan Iklan</option>
+                <option value="saran">Saran & Masukan</option>
+                <option value="lainnya">Lainnya</option>
+              </select>
+            </div>
+
+            <!-- Pesan -->
+            <div>
+              <label for="contact-message" class="block text-sm font-semibold text-brand-text dark:text-gray-200 mb-2">
+                Pesan *
+              </label>
+              <textarea
+                id="contact-message"
+                required
+                rows={5}
+                placeholder="Ceritakan pertanyaan atau kebutuhanmu di sini..."
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600
+                       bg-gray-50 dark:bg-gray-700 text-brand-text dark:text-gray-200
+                       focus:outline-none focus:border-brand-cta focus:bg-white dark:focus:bg-gray-600
+                       transition-all text-sm resize-none"
+              ></textarea>
+            </div>
+
+            <!-- Submit -->
+            <button
+              type="submit"
+              id="contact-submit"
+              class="btn-primary w-full justify-center py-4"
+            >
+              📨 Kirim Pesan
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Handle form submission
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const submitBtn = document.getElementById('contact-submit') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Simulasi pengiriman
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Mengirim...';
+    
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    submitBtn.textContent = '✅ Pesan Terkirim!';
+    submitBtn.classList.remove('btn-primary');
+    submitBtn.classList.add('bg-green-500', 'text-white', 'font-bold', 'py-4', 'rounded-2xl', 'w-full');
+    
+    form.reset();
+    
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '📨 Kirim Pesan';
+      submitBtn.classList.add('btn-primary');
+      submitBtn.classList.remove('bg-green-500', 'text-white');
+    }, 3000);
+  });
+</script>

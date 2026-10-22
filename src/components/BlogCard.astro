@@ -1,0 +1,292 @@
+---
+// src/components/BlogCard.astro
+// ============================================================
+// Kartu artikel blog dengan desain clean & playful
+// ============================================================
+
+import type { BlogPost } from '../lib/notion';
+
+interface Props {
+  post: BlogPost;
+  // 'featured' untuk tampilan besar, 'default' untuk grid biasa
+  variant?: 'default' | 'featured' | 'compact';
+  // Index untuk staggered animation
+  index?: number;
+}
+
+const { post, variant = 'default', index = 0 } = Astro.props;
+
+// Warna untuk tag yang berbeda
+const tagColors = [
+  'bg-brand-highlight/20 text-teal-700 dark:text-teal-300',
+  'bg-brand-cta/20 text-amber-700 dark:text-amber-300',
+  'bg-sage-100 text-green-700 dark:text-green-300',
+  'bg-purple-100 text-purple-700 dark:text-purple-300',
+  'bg-pink-100 text-pink-700 dark:text-pink-300',
+];
+
+// Emoji ikon berdasarkan tag pertama
+const tagEmoji: Record<string, string> = {
+  'MPASI 6 Bulan': '👶',
+  'Resep MPASI': '🍲',
+  'GTM': '😤',
+  'BLW': '🤲',
+  'Gizi': '🥗',
+  'Panduan': '📖',
+  'Meal Prep': '🍱',
+  'Review': '⭐',
+  'Perlengkapan': '🛍️',
+  'default': '🥣',
+};
+
+const firstTag = post.tags[0] || '';
+const emoji = Object.keys(tagEmoji).find(k => firstTag.includes(k)) 
+  ? tagEmoji[Object.keys(tagEmoji).find(k => firstTag.includes(k))!] 
+  : tagEmoji.default;
+
+// Placeholder warna jika tidak ada gambar
+const placeholderColors = [
+  'from-brand-highlight/30 to-sage-200',
+  'from-brand-cta/20 to-cream-200',
+  'from-purple-100 to-pink-100',
+  'from-blue-100 to-brand-highlight/30',
+];
+const placeholderColor = placeholderColors[index % placeholderColors.length];
+
+// Delay animasi untuk efek stagger
+const animDelay = `${index * 0.1}s`;
+---
+
+{variant === 'featured' ? (
+  <!-- ===== FEATURED CARD (besar, horizontal di desktop) ===== -->
+  <article
+    class="blog-card group animate-on-scroll"
+    style={`animation-delay: ${animDelay}`}
+    itemscope
+    itemtype="https://schema.org/Article"
+  >
+    <a href={`/blog/${post.slug}`} class="block md:flex" aria-label={`Baca artikel: ${post.title}`}>
+      <!-- Cover Image -->
+      <div class="md:w-2/5 aspect-blog-card md:aspect-auto overflow-hidden">
+        {post.cover ? (
+          <img
+            src={post.cover}
+            alt={`${post.title} - MangkokKecil`}
+            loading="lazy"
+            class="blog-card-image w-full h-full object-cover"
+            itemprop="image"
+          />
+        ) : (
+          <div class={`blog-card-image w-full h-full bg-gradient-to-br ${placeholderColor}
+                       flex items-center justify-center text-6xl`}>
+            {emoji}
+          </div>
+        )}
+      </div>
+
+      <!-- Content -->
+      <div class="md:w-3/5 p-6 md:p-8 flex flex-col justify-between">
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          {post.tags.slice(0, 3).map((tag, i) => (
+            <span class={`tag ${tagColors[i % tagColors.length]}`}>
+              {tag}
+            </span>
+          ))}
+          <span class="tag bg-brand-cta/10 text-brand-cta font-bold">⭐ Pilihan Editor</span>
+        </div>
+
+        <!-- Title -->
+        <h2
+          class="font-display font-bold text-xl md:text-2xl text-brand-text dark:text-white
+                 mb-3 group-hover:text-brand-cta transition-colors leading-tight line-clamp-3"
+          itemprop="headline"
+        >
+          {post.title}
+        </h2>
+
+        <!-- Excerpt -->
+        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3" itemprop="description">
+          {post.excerpt}
+        </p>
+
+        <!-- Meta info -->
+        <div class="flex items-center justify-between text-xs text-gray-400 dark:text-gray-500 mt-auto">
+          <div class="flex items-center gap-3">
+            <span class="flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+              </svg>
+              <time datetime={post.date} itemprop="datePublished">{post.dateFormatted}</time>
+            </span>
+            <span class="flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+              </svg>
+              {post.readingTime} menit baca
+            </span>
+          </div>
+          
+          <!-- Read More Arrow -->
+          <span class="flex items-center gap-1 text-brand-cta font-semibold group-hover:gap-2 transition-all">
+            Baca selengkapnya
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </a>
+  </article>
+
+) : variant === 'compact' ? (
+  <!-- ===== COMPACT CARD (untuk sidebar/related posts) ===== -->
+  <article
+    class="flex gap-4 p-4 rounded-2xl hover:bg-brand-card dark:hover:bg-gray-800 transition-colors group"
+    style={`animation-delay: ${animDelay}`}
+    itemscope
+    itemtype="https://schema.org/Article"
+  >
+    <a href={`/blog/${post.slug}`} class="flex gap-3 w-full" aria-label={`Baca: ${post.title}`}>
+      <!-- Thumbnail -->
+      <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+        {post.cover ? (
+          <img
+            src={post.cover}
+            alt={post.title}
+            loading="lazy"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+          />
+        ) : (
+          <div class={`w-full h-full bg-gradient-to-br ${placeholderColor} flex items-center justify-center text-2xl`}>
+            {emoji}
+          </div>
+        )}
+      </div>
+
+      <!-- Info -->
+      <div class="flex-1 min-w-0">
+        {post.tags[0] && (
+          <span class="tag text-xs mb-1 inline-block">{post.tags[0]}</span>
+        )}
+        <h3
+          class="font-display font-semibold text-sm text-brand-text dark:text-white
+                 group-hover:text-brand-cta transition-colors line-clamp-2 leading-tight"
+          itemprop="headline"
+        >
+          {post.title}
+        </h3>
+        <p class="text-xs text-gray-400 mt-1">
+          <time datetime={post.date}>{post.dateFormatted}</time>
+          · {post.readingTime} mnt
+        </p>
+      </div>
+    </a>
+  </article>
+
+) : (
+  <!-- ===== DEFAULT CARD (grid layout) ===== -->
+  <article
+    class="blog-card group animate-on-scroll"
+    style={`animation-delay: ${animDelay}`}
+    itemscope
+    itemtype="https://schema.org/Article"
+  >
+    <a href={`/blog/${post.slug}`} class="block" aria-label={`Baca artikel: ${post.title}`}>
+      
+      <!-- Cover Image -->
+      <div class="aspect-blog-card overflow-hidden relative">
+        {post.cover ? (
+          <img
+            src={post.cover}
+            alt={`${post.title} - MangkokKecil`}
+            loading="lazy"
+            class="blog-card-image w-full h-full object-cover"
+            itemprop="image"
+          />
+        ) : (
+          <div class={`blog-card-image w-full h-full bg-gradient-to-br ${placeholderColor}
+                       flex items-center justify-center text-5xl`}>
+            {emoji}
+          </div>
+        )}
+
+        <!-- Reading time badge -->
+        <div class="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm
+                    rounded-full px-2.5 py-1 text-xs font-semibold text-brand-text dark:text-gray-200">
+          ⏱ {post.readingTime} mnt
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="p-5">
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-1.5 mb-3">
+          {post.tags.slice(0, 2).map((tag, i) => (
+            <span class={`tag text-xs ${tagColors[i % tagColors.length]}`}>
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <!-- Title -->
+        <h2
+          class="font-display font-bold text-base md:text-lg text-brand-text dark:text-white
+                 mb-2 group-hover:text-brand-cta transition-colors leading-snug line-clamp-2"
+          itemprop="headline"
+        >
+          {post.title}
+        </h2>
+
+        <!-- Excerpt -->
+        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4" itemprop="description">
+          {post.excerpt}
+        </p>
+
+        <!-- Meta footer -->
+        <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+          <div class="flex items-center gap-2">
+            <!-- Avatar placeholder -->
+            <div class="w-6 h-6 rounded-full bg-brand-cta/20 flex items-center justify-center text-xs">
+              👩
+            </div>
+            <span class="text-xs text-gray-400" itemprop="author">
+              {post.author}
+            </span>
+          </div>
+          <time
+            datetime={post.date}
+            class="text-xs text-gray-400"
+            itemprop="datePublished"
+          >
+            {post.dateFormatted}
+          </time>
+        </div>
+      </div>
+    </a>
+  </article>
+)}
+
+<!-- Animate on scroll script (hanya dijalankan sekali) -->
+<script>
+  // Intersection Observer untuk animasi scroll
+  if (!window.__animationObserver) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    // Observe semua elemen dengan class animate-on-scroll
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+      observer.observe(el);
+    });
+
+    (window as any).__animationObserver = observer;
+  }
+</script>

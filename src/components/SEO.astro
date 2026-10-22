@@ -1,0 +1,199 @@
+---
+// src/components/SEO.astro
+// ============================================================
+// Komponen SEO lengkap untuk MangkokKecil
+// Menghasilkan semua meta tag yang dibutuhkan untuk SEO
+// ============================================================
+
+interface Props {
+  // Judul halaman
+  title: string;
+  // Deskripsi halaman (max 160 karakter)
+  description: string;
+  // URL gambar untuk Open Graph & Twitter Card
+  image?: string;
+  // URL canonical (default: URL halaman saat ini)
+  canonical?: string;
+  // Tipe halaman: 'website' untuk homepage, 'article' untuk blog post
+  type?: 'website' | 'article';
+  // Nama penulis artikel
+  author?: string;
+  // Tanggal publish (untuk artikel)
+  datePublished?: string;
+  // Tanggal terakhir diupdate (untuk artikel)
+  dateModified?: string;
+  // Tags artikel (untuk artikel)
+  tags?: string[];
+  // Sembunyikan dari search engine (halaman draft/private)
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description,
+  image = '/og-default.png',
+  canonical,
+  type = 'website',
+  author = 'Tim MangkokKecil',
+  datePublished,
+  dateModified,
+  tags = [],
+  noIndex = false,
+} = Astro.props;
+
+// Info website global
+const SITE_NAME = 'MangkokKecil';
+const SITE_URL = 'https://mangkokkecil.vercel.app';
+const SITE_TWITTER = '@mangkokkecil';
+const SITE_LOGO = `${SITE_URL}/logo.png`;
+
+// Buat judul lengkap: "Judul Artikel | MangkokKecil"
+const fullTitle = title.includes(SITE_NAME)
+  ? title
+  : `${title} | ${SITE_NAME}`;
+
+// URL canonical
+const canonicalURL = canonical || new URL(Astro.url.pathname, SITE_URL).toString();
+
+// URL gambar OG (harus absolute URL)
+const ogImage = image.startsWith('http') ? image : `${SITE_URL}${image}`;
+
+// ============================================================
+// JSON-LD Schema untuk artikel (Schema.org)
+// Ini membantu Google memahami konten artikel kamu
+// ============================================================
+const articleSchema = type === 'article' ? {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description: description,
+  image: ogImage,
+  author: {
+    '@type': 'Person',
+    name: author,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE_NAME,
+    logo: {
+      '@type': 'ImageObject',
+      url: SITE_LOGO,
+    },
+  },
+  datePublished: datePublished || new Date().toISOString(),
+  dateModified: dateModified || datePublished || new Date().toISOString(),
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonicalURL,
+  },
+  keywords: tags.join(', '),
+} : null;
+
+// Schema Organization untuk semua halaman
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: SITE_LOGO,
+  description: 'Blog MPASI terpercaya untuk ibu-ibu Indonesia. Panduan gizi, resep, dan tips MPASI sesuai standar WHO/IDAI.',
+  sameAs: [
+    'https://instagram.com/mangkokkecil',
+    'https://twitter.com/mangkokkecil',
+  ],
+};
+---
+
+<!-- ============================================================
+     BASIC META TAGS
+     ============================================================ -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- SEO: Judul & Deskripsi -->
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+
+<!-- Canonical URL (mencegah duplikasi konten) -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Robots: izinkan/larang indexing -->
+{noIndex ? (
+  <meta name="robots" content="noindex, nofollow" />
+) : (
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+)}
+
+<!-- Author -->
+<meta name="author" content={author} />
+
+<!-- Keywords dari tags -->
+{tags.length > 0 && (
+  <meta name="keywords" content={tags.join(', ')} />
+)}
+
+<!-- ============================================================
+     OPEN GRAPH (Facebook, WhatsApp, LinkedIn)
+     ============================================================ -->
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:locale" content="id_ID" />
+
+<!-- Article-specific OG tags -->
+{type === 'article' && datePublished && (
+  <meta property="article:published_time" content={datePublished} />
+)}
+{type === 'article' && dateModified && (
+  <meta property="article:modified_time" content={dateModified} />
+)}
+{type === 'article' && author && (
+  <meta property="article:author" content={author} />
+)}
+{type === 'article' && tags.map((tag) => (
+  <meta property="article:tag" content={tag} />
+))}
+
+<!-- ============================================================
+     TWITTER CARD
+     ============================================================ -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={SITE_TWITTER} />
+<meta name="twitter:creator" content={SITE_TWITTER} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={title} />
+
+<!-- ============================================================
+     PRECONNECT (Optimasi performa)
+     Memberi tahu browser untuk konek lebih awal ke server penting
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<!-- Theme color (untuk browser mobile) -->
+<meta name="theme-color" content="#FFB703" />
+
+<!-- ============================================================
+     JSON-LD SCHEMA (Structured Data untuk Google)
+     ============================================================ -->
+
+<!-- Schema: Article (hanya untuk halaman artikel) -->
+{articleSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema, null, 2)} />
+)}
+
+<!-- Schema: Organization (semua halaman) -->
+<script type="application/ld+json" set:html={JSON.stringify(organizationSchema, null, 2)} />

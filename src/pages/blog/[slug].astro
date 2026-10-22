@@ -1,0 +1,411 @@
+---
+// src/pages/blog/[slug].astro
+// ============================================================
+// Halaman detail artikel blog
+// Mengambil konten dari Notion berdasarkan slug URL
+// ============================================================
+
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import {
+  getAllPosts,
+  getPostBySlug,
+  getPageBlocks,
+  getRelatedPosts,
+  type NotionBlock,
+} from '../../lib/notion';
+
+// ============================================================
+// STATIC PATHS - Astro butuh ini untuk generate semua URL
+// ============================================================
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+// Ambil data post dari props
+const { post: initialPost } = Astro.props;
+const { slug } = Astro.params;
+
+// Ambil post detail + blocks konten
+const post = initialPost || (await getPostBySlug(slug));
+
+// Redirect 404 jika post tidak ditemukan
+if (!post) {
+  return Astro.redirect('/blog');
+}
+
+// Ambil konten/blocks artikel dari Notion
+const blocks = await getPageBlocks(post.id);
+
+// Ambil artikel terkait berdasarkan tags yang sama
+const relatedPosts = await getRelatedPosts(post.slug, post.tags, 3);
+
+// ============================================================
+// JSON-LD BreadcrumbList Schema
+// ============================================================
+const breadcrumbItems = [
+  { label: 'Blog', href: '/blog' },
+  { label: post.title },
+];
+
+// Estimasi reading time dari blocks
+function countWordsFromBlocks(blocks: NotionBlock[]): number {
+  return blocks.reduce((count, block) => {
+    return count + (block.content?.split(' ').length || 0);
+  }, 0);
+}
+const wordCount = countWordsFromBlocks(blocks);
+const readingTime = Math.max(post.readingTime, Math.ceil(wordCount / 225));
+
+// Format tanggal untuk structured data
+const dateISO = post.date ? new Date(post.date).toISOString() : new Date().toISOString();
+---
+
+<Layout
+  title={`${post.title} | MangkokKecil`}
+  description={post.excerpt}
+  image={post.cover || '/og-default.png'}
+  type="article"
+  author={post.author}
+  datePublished={dateISO}
+  dateModified={dateISO}
+  tags={post.tags}
+>
+  <!-- ===== ARTIKEL HEADER ===== -->
+  <div class="bg-gradient-to-b from-brand-card to-white dark:from-gray-800 dark:to-gray-900 pt-28 pb-8">
+    <div class="container-custom max-w-4xl">
+      
+      <!-- Breadcrumbs -->
+      <Breadcrumbs items={breadcrumbItems} />
+
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2 mb-5">
+        {post.tags.map((tag) => (
+          <a
+            href={`/blog?tag=${encodeURIComponent(tag)}`}
+            class="tag hover:bg-brand-cta hover:text-brand-text transition-colors"
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
+
+      <!-- H1: Judul Artikel -->
+      <h1 class="font-display font-extrabold text-2xl md:text-3xl lg:text-4xl text-brand-text dark:text-white leading-tight mb-6">
+        {post.title}
+      </h1>
+
+      <!-- Meta info artikel -->
+      <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 pb-6 border-b border-gray-200 dark:border-gray-700">
+        
+        <!-- Author -->
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-brand-cta/20 flex items-center justify-center text-base">
+            👩
+          </div>
+          <div>
+            <span class="font-semibold text-brand-text dark:text-gray-200 text-xs block">{post.author}</span>
+            <span class="text-xs">Tim MangkokKecil</span>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <span class="text-gray-200 dark:text-gray-700" aria-hidden="true">|</span>
+
+        <!-- Tanggal publish -->
+        <div class="flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+          </svg>
+          <time datetime={post.date}>{post.dateFormatted}</time>
+        </div>
+
+        <!-- Reading time -->
+        <div class="flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+          </svg>
+          <span>{readingTime} menit baca</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="container-custom max-w-4xl py-8 md:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+      <!-- ===== ARTIKEL KONTEN (Main) ===== -->
+      <article class="lg:col-span-8" itemscope itemtype="https://schema.org/Article">
+        <!-- Hidden meta untuk schema -->
+        <meta itemprop="headline" content={post.title} />
+        <meta itemprop="author" content={post.author} />
+        <meta itemprop="datePublished" content={dateISO} />
+
+        <!-- Cover Image -->
+        {post.cover && (
+          <div class="mb-8 rounded-3xl overflow-hidden shadow-card-hover">
+            <img
+              src={post.cover}
+              alt={`${post.title} - MangkokKecil`}
+              loading="lazy"
+              class="w-full aspect-video object-cover"
+              itemprop="image"
+            />
+          </div>
+        )}
+
+        <!-- Excerpt / Lead paragraph -->
+        {post.excerpt && (
+          <div class="bg-brand-card dark:bg-gray-800 border-l-4 border-brand-cta rounded-r-2xl p-5 mb-8">
+            <p class="text-gray-600 dark:text-gray-300 text-base leading-relaxed font-medium italic" itemprop="description">
+              {post.excerpt}
+            </p>
+          </div>
+        )}
+
+        <!-- ===== NOTION CONTENT RENDERER ===== -->
+        <div class="prose-blog" itemprop="articleBody">
+          {blocks.length > 0 ? (
+            blocks.map((block) => {
+              switch (block.type) {
+                case 'heading':
+                  if (block.level === 1) {
+                    return <h1 class="text-3xl font-display font-bold mt-8 mb-4 text-brand-text dark:text-gray-100">{block.content}</h1>;
+                  } else if (block.level === 2) {
+                    return <h2 class="text-2xl font-display font-bold mt-8 mb-4 text-brand-text dark:text-gray-100">{block.content}</h2>;
+                  } else {
+                    return <h3 class="text-xl font-display font-semibold mt-6 mb-3 text-brand-text dark:text-gray-200">{block.content}</h3>;
+                  }
+
+                case 'paragraph':
+                  return block.content ? (
+                    <p class="text-base md:text-lg leading-relaxed mb-4 text-gray-700 dark:text-gray-300">{block.content}</p>
+                  ) : (
+                    <br />
+                  );
+
+                case 'quote':
+                  return (
+                    <blockquote class="pl-6 py-3 my-6 border-l-4 border-brand-highlight bg-brand-highlight/10 dark:bg-brand-highlight/5 rounded-r-2xl">
+                      <p class="text-gray-600 dark:text-gray-300 italic">{block.content}</p>
+                    </blockquote>
+                  );
+
+                case 'list_item':
+                  return (
+                    <ul class="list-disc list-outside ml-6 mb-2">
+                      <li class="text-base md:text-lg text-gray-700 dark:text-gray-300 mb-1">{block.content}</li>
+                    </ul>
+                  );
+
+                case 'numbered_item':
+                  return (
+                    <ol class="list-decimal list-outside ml-6 mb-2">
+                      <li class="text-base md:text-lg text-gray-700 dark:text-gray-300 mb-1">{block.content}</li>
+                    </ol>
+                  );
+
+                case 'code':
+                  return (
+                    <div class="my-6">
+                      {block.language && block.language !== 'plain text' && (
+                        <div class="bg-gray-700 text-gray-300 text-xs px-4 py-1 rounded-t-xl font-mono">
+                          {block.language}
+                        </div>
+                      )}
+                      <pre class="bg-gray-900 dark:bg-gray-950 text-gray-100 rounded-b-2xl rounded-tr-2xl p-6 overflow-x-auto text-sm">
+                        <code>{block.content}</code>
+                      </pre>
+                    </div>
+                  );
+
+                case 'image':
+                  return (
+                    <figure class="my-8">
+                      <img
+                        src={block.url}
+                        alt={block.caption || `Gambar artikel: ${post.title}`}
+                        loading="lazy"
+                        class="w-full rounded-2xl shadow-card"
+                      />
+                      {block.caption && (
+                        <figcaption class="text-center text-sm text-gray-400 mt-2 italic">
+                          {block.caption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  );
+
+                case 'divider':
+                  return <hr class="border-gray-200 dark:border-gray-700 my-8" />;
+
+                case 'callout':
+                  return (
+                    <div class="bg-brand-cta/10 border border-brand-cta/30 rounded-2xl p-5 my-6 flex gap-3">
+                      <span class="text-xl flex-shrink-0">💡</span>
+                      <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{block.content}</p>
+                    </div>
+                  );
+
+                case 'todo':
+                  return (
+                    <div class="flex items-start gap-3 mb-2">
+                      <input
+                        type="checkbox"
+                        checked={block.checked}
+                        disabled
+                        class="mt-1 rounded accent-brand-cta"
+                        aria-label={block.content}
+                      />
+                      <span class={`text-base text-gray-700 dark:text-gray-300 ${block.checked ? 'line-through text-gray-400' : ''}`}>
+                        {block.content}
+                      </span>
+                    </div>
+                  );
+
+                default:
+                  return null;
+              }
+            })
+          ) : (
+            <!-- Placeholder saat konten dari Notion belum ada -->
+            <div class="text-center py-12 bg-brand-card dark:bg-gray-800 rounded-2xl">
+              <span class="text-4xl block mb-3">📝</span>
+              <p class="text-gray-500">Konten artikel sedang dimuat dari Notion...</p>
+              <p class="text-sm text-gray-400 mt-1">Pastikan NOTION_TOKEN dan DATABASE_ID sudah dikonfigurasi.</p>
+            </div>
+          )}
+        </div>
+
+        <!-- ===== TAGS FOOTER ===== -->
+        <div class="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <p class="text-sm font-semibold text-gray-400 mb-3">Tag artikel:</p>
+          <div class="flex flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="tag hover:bg-brand-cta hover:text-brand-text">
+                #{tag}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- ===== SHARE SECTION ===== -->
+        <div class="mt-8 p-6 bg-brand-card dark:bg-gray-800 rounded-3xl">
+          <p class="font-display font-bold text-brand-text dark:text-white mb-3">
+            💛 Artikel ini bermanfaat? Bagikan ke sesama ibu!
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`Baca artikel ini dari MangkokKecil: ${post.title} - https://mangkokkecil.vercel.app/blog/${post.slug}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+            >
+              📱 WhatsApp
+            </a>
+            <button
+              onclick={`navigator.clipboard.writeText('https://mangkokkecil.vercel.app/blog/${post.slug}').then(() => alert('Link berhasil disalin!'))`}
+              class="flex items-center gap-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-brand-text dark:text-gray-200 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+            >
+              🔗 Salin Link
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== CTA KOMENTAR ===== -->
+        <div class="mt-8 cta-section">
+          <div class="relative z-10">
+            <p class="font-display font-extrabold text-xl text-brand-text mb-2">
+              Setiap ibu pasti pernah frustasi menghadapi fase GTM. 😤
+            </p>
+            <p class="text-brand-text/80 text-sm mb-4">
+              Apa menu penyelamat andalan Ibu saat si Kecil menolak makan? 
+              <strong>Bagikan cerita dan resep rahasia Ibu di kolom komentar, yuk!</strong>
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===== SIDEBAR ===== -->
+      <aside class="lg:col-span-4 space-y-8" aria-label="Sidebar">
+        
+        <!-- Related Posts -->
+        {relatedPosts.length > 0 && (
+          <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-100 dark:border-gray-700 shadow-card">
+            <h2 class="font-display font-bold text-base text-brand-text dark:text-white mb-4">
+              📚 Artikel Terkait
+            </h2>
+            <div class="space-y-1">
+              {relatedPosts.map((related, i) => (
+                <BlogCard post={related} variant="compact" index={i} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        <!-- Tags populer -->
+        <div class="bg-brand-card dark:bg-gray-800 rounded-3xl p-6 border border-brand-highlight/20">
+          <h2 class="font-display font-bold text-base text-brand-text dark:text-white mb-4">
+            🏷️ Topik Blog
+          </h2>
+          <div class="flex flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="tag hover:bg-brand-cta hover:text-brand-text">
+                {tag}
+              </a>
+            ))}
+            <a href="/blog" class="tag hover:bg-brand-cta hover:text-brand-text">Lihat semua →</a>
+          </div>
+        </div>
+
+        <!-- Newsletter sidebar -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-100 dark:border-gray-700 shadow-card sticky top-24">
+          <div class="text-center">
+            <div class="text-4xl mb-3">💌</div>
+            <h2 class="font-display font-bold text-base text-brand-text dark:text-white mb-2">
+              Dapat Tips MPASI Gratis!
+            </h2>
+            <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+              Daftar newsletter dan dapatkan artikel terbaru setiap minggu langsung di inbox kamu.
+            </p>
+            <form class="space-y-3" aria-label="Newsletter sidebar">
+              <label for="sidebar-newsletter-email" class="sr-only">Email kamu</label>
+              <input
+                id="sidebar-newsletter-email"
+                type="email"
+                placeholder="email@kamu.com"
+                required
+                class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600
+                       bg-gray-50 dark:bg-gray-700 text-sm text-brand-text dark:text-gray-200
+                       focus:outline-none focus:border-brand-cta"
+              />
+              <button type="submit" class="btn-primary w-full justify-center text-sm">
+                Daftar Gratis ✨
+              </button>
+            </form>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ===== ARTIKEL TERKAIT (bawah) ===== -->
+    {relatedPosts.length > 0 && (
+      <section class="mt-16 pt-12 border-t border-gray-200 dark:border-gray-700" aria-labelledby="related-heading">
+        <h2 class="font-display font-bold text-2xl text-brand-text dark:text-white mb-8" id="related-heading">
+          Artikel Terkait yang Mungkin Kamu Suka
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {relatedPosts.map((post, i) => (
+            <BlogCard post={post} index={i} />
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</Layout>

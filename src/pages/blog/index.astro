@@ -1,0 +1,179 @@
+---
+// src/pages/blog/index.astro
+// ============================================================
+// Halaman daftar semua artikel blog
+// Fitur: grid kartu, filter tag, search
+// ============================================================
+
+import Layout from '../../layouts/Layout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getAllPosts } from '../../lib/notion';
+
+// Ambil semua post dari Notion
+const allPosts = await getAllPosts();
+
+// Ambil semua tags unik dari semua post
+const allTags = [...new Set(allPosts.flatMap((p) => p.tags))].sort();
+
+// Cek filter tag dari URL query (?tag=xxx)
+const selectedTag = Astro.url.searchParams.get('tag') || '';
+
+// Filter post berdasarkan tag jika ada
+const filteredPosts = selectedTag
+  ? allPosts.filter((p) => p.tags.some((t) => t.toLowerCase() === selectedTag.toLowerCase()))
+  : allPosts;
+
+// SEO
+const pageTitle = selectedTag
+  ? `Artikel ${selectedTag} | Blog MPASI MangkokKecil`
+  : 'Blog MPASI - Panduan Lengkap & Resep Bayi | MangkokKecil';
+
+const pageDescription = selectedTag
+  ? `Kumpulan artikel dan panduan seputar ${selectedTag} untuk bayi dan ibu muda Indonesia. Terpercaya, praktis, dan berbasis riset.`
+  : 'Blog MPASI terlengkap untuk ibu muda Indonesia. Temukan resep bayi, panduan gizi, tips mengatasi GTM, panduan BLW, dan ulasan perlengkapan MPASI terbaik.';
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  type="website"
+>
+  <!-- ===== PAGE HEADER ===== -->
+  <div class="bg-gradient-to-b from-brand-card to-white dark:from-gray-800 dark:to-gray-900 pt-28 pb-12">
+    <div class="container-custom">
+      
+      <!-- Breadcrumb sederhana -->
+      <nav class="text-sm text-gray-400 mb-6" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2" role="list">
+          <li><a href="/" class="hover:text-brand-cta transition-colors">Home</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-brand-text dark:text-gray-200 font-medium">Blog</li>
+          {selectedTag && (
+            <>
+              <li aria-hidden="true">›</li>
+              <li class="text-brand-cta font-medium">{selectedTag}</li>
+            </>
+          )}
+        </ol>
+      </nav>
+
+      <!-- Heading -->
+      <h1 class="section-title mb-4">
+        {selectedTag ? (
+          <>Artikel tentang <span class="text-gradient">{selectedTag}</span></>
+        ) : (
+          <>Blog <span class="text-gradient">MPASI</span> 🥣</>
+        )}
+      </h1>
+
+      <p class="section-subtitle max-w-2xl">
+        {selectedTag
+          ? `Menampilkan ${filteredPosts.length} artikel tentang ${selectedTag}`
+          : `${allPosts.length} artikel panduan MPASI untuk perjalanan tumbuh kembang si Kecil`
+        }
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <section class="section" aria-label="Daftar artikel blog">
+    <div class="container-custom">
+      
+      <!-- ===== FILTER TAGS ===== -->
+      <div class="mb-8 md:mb-12">
+        <p class="text-sm font-semibold text-gray-400 dark:text-gray-500 mb-3 uppercase tracking-wide">
+          Filter berdasarkan topik:
+        </p>
+        <div class="flex flex-wrap gap-2" role="list" aria-label="Filter topik">
+          
+          <!-- Tag: Semua -->
+          <a
+            href="/blog"
+            class={`tag font-semibold transition-all ${
+              !selectedTag
+                ? 'bg-brand-cta text-brand-text shadow-cta scale-105'
+                : 'hover:bg-brand-cta/20'
+            }`}
+            aria-current={!selectedTag ? 'true' : undefined}
+          >
+            ✨ Semua Artikel
+          </a>
+
+          <!-- Tag items dari Notion -->
+          {allTags.map((tag) => (
+            <a
+              href={`/blog?tag=${encodeURIComponent(tag)}`}
+              class={`tag transition-all ${
+                selectedTag === tag
+                  ? 'bg-brand-cta text-brand-text shadow-cta scale-105'
+                  : 'hover:bg-brand-cta/20'
+              }`}
+              aria-current={selectedTag === tag ? 'true' : undefined}
+            >
+              {tag}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- ===== POSTS GRID ===== -->
+      {filteredPosts.length > 0 ? (
+        <div>
+          {/* Featured post (post pertama tampil lebih besar) */}
+          {!selectedTag && filteredPosts.length > 0 && (
+            <div class="mb-8">
+              <BlogCard post={filteredPosts[0]} variant="featured" index={0} />
+            </div>
+          )}
+
+          {/* Grid post lainnya */}
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {(selectedTag ? filteredPosts : filteredPosts.slice(1)).map((post, i) => (
+              <BlogCard post={post} index={i + 1} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <!-- Empty state -->
+        <div class="text-center py-20 bg-brand-card dark:bg-gray-800 rounded-3xl">
+          <div class="text-6xl mb-4">🔍</div>
+          <h2 class="font-display font-bold text-xl text-brand-text dark:text-white mb-2">
+            Belum ada artikel untuk topik ini
+          </h2>
+          <p class="text-gray-400 text-sm mb-6">
+            Artikel sedang disiapkan. Coba topik lain atau lihat semua artikel.
+          </p>
+          <a href="/blog" class="btn-primary">Lihat Semua Artikel</a>
+        </div>
+      )}
+
+      <!-- ===== CTA Newsletter ===== -->
+      <div class="mt-16 bg-brand-card dark:bg-gray-800 rounded-3xl p-8 md:p-12 text-center border border-brand-highlight/20">
+        <div class="text-4xl mb-4">💌</div>
+        <h2 class="font-display font-bold text-xl md:text-2xl text-brand-text dark:text-white mb-3">
+          Jangan Ketinggalan Artikel Baru!
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-md mx-auto">
+          Daftar newsletter dan dapatkan artikel MPASI terbaru, resep eksklusif, 
+          dan tips mingguan langsung di inbox kamu.
+        </p>
+        <form class="flex flex-col sm:flex-row gap-3 max-w-sm mx-auto" aria-label="Form newsletter blog">
+          <label for="blog-newsletter-email" class="sr-only">Alamat email kamu</label>
+          <input
+            id="blog-newsletter-email"
+            type="email"
+            placeholder="email@kamu.com"
+            required
+            class="flex-1 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600
+                   bg-white dark:bg-gray-700 text-brand-text dark:text-gray-200
+                   focus:outline-none focus:border-brand-cta text-sm"
+          />
+          <button type="submit" class="btn-primary whitespace-nowrap">
+            Daftar ✨
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</Layout>

@@ -1,0 +1,182 @@
+---
+// src/components/Hero.astro
+// ============================================================
+// Hero section homepage MangkokKecil
+// Desain: Clean & Playful dengan gradient organik
+// ============================================================
+---
+
+<section class="hero-gradient min-h-screen flex items-center relative overflow-hidden pt-20" aria-label="Hero section MangkokKecil">
+  
+  <!-- ===== DECORATIVE ELEMENTS ===== -->
+  <!-- Blob organik kiri atas -->
+  <div 
+    class="absolute -top-20 -left-20 w-72 md:w-96 h-72 md:h-96 rounded-full opacity-40 dark:opacity-20 pointer-events-none animate-float"
+    style="background: radial-gradient(circle, #A8DADC 0%, #E8F5E9 70%, transparent 100%)"
+    aria-hidden="true"
+  ></div>
+  
+  <!-- Blob kuning kanan -->
+  <div 
+    class="absolute -top-10 -right-16 w-64 md:w-80 h-64 md:h-80 rounded-full opacity-30 dark:opacity-15 pointer-events-none animate-float"
+    style="background: radial-gradient(circle, #FFB703 0%, #FFE082 70%, transparent 100%); animation-delay: 2s"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Blob hijau bawah -->
+  <div 
+    class="absolute -bottom-20 left-1/3 w-60 h-60 rounded-full opacity-20 dark:opacity-10 pointer-events-none animate-float"
+    style="background: radial-gradient(circle, #4CAF50 0%, transparent 70%); animation-delay: 4s"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Decorative dots pattern -->
+  <div class="absolute top-1/4 right-8 grid grid-cols-4 gap-2 opacity-20 dark:opacity-10 pointer-events-none" aria-hidden="true">
+    {Array.from({ length: 16 }).map(() => (
+      <div class="w-2 h-2 rounded-full bg-brand-cta"></div>
+    ))}
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="container-custom relative z-10 py-16 md:py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      
+      <!-- LEFT COLUMN: Text content -->
+      <div class="text-center lg:text-left animate-slide-up">
+        
+        <!-- Badge / Label -->
+        <div class="inline-flex items-center gap-2 bg-white dark:bg-gray-800 rounded-full
+                    px-4 py-2 text-sm font-semibold text-brand-text dark:text-gray-200
+                    border border-brand-highlight/30 shadow-card mb-6 md:mb-8">
+          <span class="animate-bounce-soft">👶</span>
+          Panduan MPASI Sesuai Standar WHO & IDAI
+        </div>
+
+        <!-- H1 - Satu-satunya H1 di halaman ini -->
+        <h1 class="section-title mb-4 md:mb-6">
+          Perjalanan MPASI
+          <span class="text-gradient block">si Kecil Dimulai</span>
+          dari Sini 🥣
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-base md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">
+          MangkokKecil hadir sebagai teman perjalanan MPASI kamu! Dari resep puree pertama, 
+          tips mengatasi GTM, panduan gizi, hingga review perlengkapan — semua lengkap, 
+          terpercaya, dan mudah dipahami untuk ibu muda Indonesia.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+          <a
+            href="/blog"
+            class="btn-primary text-base px-8 py-4"
+            id="hero-cta-blog"
+          >
+            📖 Mulai Baca Blog
+          </a>
+          <a
+            href="/panduan"
+            class="btn-secondary text-base px-8 py-4"
+            id="hero-cta-panduan"
+          >
+            📋 Panduan MPASI
+          </a>
+        </div>
+
+        <!-- Trust Stats -->
+        <div class="flex flex-wrap gap-6 mt-10 justify-center lg:justify-start">
+          {[
+            { number: '100+', label: 'Artikel MPASI' },
+            { number: '50K+', label: 'Ibu Terbantu' },
+            { number: '★ 4.9', label: 'Rating Pembaca' },
+          ].map((stat) => (
+            <div class="text-center">
+              <p class="font-display font-extrabold text-2xl md:text-3xl text-brand-text dark:text-white">
+                {stat.number}
+              </p>
+              <p class="text-xs text-gray-400 mt-0.5">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Visual illustration -->
+      <div class="relative animate-fade-in hidden lg:block">
+        
+        <!-- Main visual card -->
+        <div class="relative">
+          <!-- Big emoji illustration -->
+          <div class="w-72 h-72 xl:w-96 xl:h-96 mx-auto rounded-[3rem] 
+                      bg-gradient-to-br from-brand-card via-white to-brand-highlight/20
+                      dark:from-gray-800 dark:via-gray-700 dark:to-gray-800
+                      shadow-card-hover flex items-center justify-center
+                      border border-brand-highlight/20 relative overflow-hidden">
+            
+            <!-- Decorative background circle -->
+            <div class="absolute inset-0 flex items-center justify-center opacity-10" aria-hidden="true">
+              <div class="w-64 h-64 rounded-full border-4 border-brand-highlight"></div>
+            </div>
+            
+            <span class="text-8xl xl:text-9xl animate-bounce-soft" role="img" aria-label="Mangkok MPASI">🥣</span>
+          </div>
+
+          <!-- Floating mini cards (decorative) -->
+          <!-- Card: Zat Besi -->
+          <div class="absolute -top-4 -left-4 glass rounded-2xl p-3 shadow-card border border-white/50 dark:border-gray-700 animate-float" style="animation-delay: 1s">
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-2xl">🥦</span>
+              <div>
+                <p class="font-bold text-brand-text dark:text-white text-xs">Zat Besi</p>
+                <p class="text-gray-400 text-xs">Cegah anemia</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Protein -->
+          <div class="absolute -bottom-2 -left-6 glass rounded-2xl p-3 shadow-card border border-white/50 dark:border-gray-700 animate-float" style="animation-delay: 3s">
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-2xl">🥚</span>
+              <div>
+                <p class="font-bold text-brand-text dark:text-white text-xs">Protein</p>
+                <p class="text-gray-400 text-xs">Tumbuh optimal</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: GTM solved -->
+          <div class="absolute top-8 -right-4 glass rounded-2xl p-3 shadow-card border border-white/50 dark:border-gray-700 animate-float" style="animation-delay: 2s">
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-2xl">✅</span>
+              <div>
+                <p class="font-bold text-brand-text dark:text-white text-xs">GTM Teratasi!</p>
+                <p class="text-gray-400 text-xs">Tips terbukti</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Rating WHO -->
+          <div class="absolute -bottom-4 -right-2 glass rounded-2xl p-3 shadow-card border border-white/50 dark:border-gray-700 animate-float" style="animation-delay: 0.5s">
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-2xl">🏆</span>
+              <div>
+                <p class="font-bold text-brand-text dark:text-white text-xs">Sesuai WHO</p>
+                <p class="text-gray-400 text-xs">& Standar IDAI</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCROLL INDICATOR ===== -->
+    <div class="flex justify-center mt-16 animate-bounce-soft" aria-hidden="true">
+      <div class="flex flex-col items-center gap-2 text-gray-300">
+        <span class="text-xs uppercase tracking-widest">Scroll</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>

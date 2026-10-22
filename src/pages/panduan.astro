@@ -1,0 +1,225 @@
+---
+// src/pages/panduan.astro
+// ============================================================
+// Halaman Panduan MPASI Lengkap - MangkokKecil
+// ============================================================
+
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Panduan MPASI Lengkap untuk Ibu Indonesia | MangkokKecil"
+  description="Panduan MPASI komprehensif dari usia 6 bulan hingga 24 bulan sesuai standar WHO & IDAI. Termasuk jadwal tekstur, porsi, alergi, GTM, dan BLW vs spoon-feeding."
+>
+  <!-- Header -->
+  <div class="bg-gradient-to-b from-sage-100 to-white dark:from-gray-800 dark:to-gray-900 pt-28 pb-16">
+    <div class="container-custom max-w-3xl text-center">
+      <span class="tag bg-brand-cta/20 text-amber-700 dark:text-amber-300 mb-4 inline-block">📖 Panduan Lengkap</span>
+      <h1 class="section-title mb-4">
+        Panduan MPASI <span class="text-gradient">Lengkap</span><br/>untuk Ibu Indonesia
+      </h1>
+      <p class="section-subtitle">
+        Sesuai standar WHO & IDAI. Dari usia 6 bulan hingga 24 bulan.
+        Mudah dipahami, langsung bisa diterapkan.
+      </p>
+    </div>
+  </div>
+
+  <div class="container-custom max-w-4xl py-12">
+
+    <!-- Daftar Isi / Table of Contents -->
+    <div class="bg-brand-card dark:bg-gray-800 rounded-3xl p-6 mb-12 border border-brand-highlight/20">
+      <h2 class="font-display font-bold text-lg text-brand-text dark:text-white mb-4">📋 Daftar Isi</h2>
+      <ol class="space-y-2 text-sm" role="list">
+        {[
+          'Kapan Bayi Siap MPASI?',
+          'Prinsip Dasar MPASI',
+          'Panduan Tekstur per Usia',
+          'Komposisi Gizi Ideal',
+          'Mengenali Tanda Alergi',
+          'BLW vs Spoon-Feeding',
+          'Mengatasi GTM',
+          'Tips Penyimpanan MPASI',
+        ].map((item, i) => (
+          <li>
+            <a
+              href={`#bagian-${i + 1}`}
+              class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-brand-cta transition-colors"
+            >
+              <span class="w-6 h-6 rounded-full bg-brand-cta/20 text-brand-cta text-xs flex items-center justify-center font-bold flex-shrink-0">
+                {i + 1}
+              </span>
+              {item}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <!-- Bagian 1: Kesiapan MPASI -->
+    <section id="bagian-1" class="mb-12 animate-on-scroll" aria-labelledby="section1-heading">
+      <div class="flex items-start gap-4 mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-brand-highlight/20 flex items-center justify-center text-2xl flex-shrink-0">
+          👶
+        </div>
+        <div>
+          <span class="text-xs font-bold text-brand-cta uppercase tracking-wide">Bagian 1</span>
+          <h2 class="font-display font-bold text-2xl text-brand-text dark:text-white" id="section1-heading">
+            Kapan Bayi Siap Mulai MPASI?
+          </h2>
+        </div>
+      </div>
+
+      <div class="prose-blog space-y-4">
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+          Menurut <strong>WHO dan IDAI</strong>, MPASI idealnya dimulai pada usia <strong>6 bulan</strong> 
+          (180 hari), saat sistem pencernaan bayi sudah cukup matang. Sebelum 6 bulan, ASI eksklusif 
+          sudah mencukupi semua kebutuhan nutrisi bayi.
+        </p>
+      </div>
+
+      <!-- Tanda kesiapan -->
+      <div class="mt-6 bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
+        <h3 class="font-display font-bold text-base text-brand-text dark:text-white mb-4">
+          ✅ 5 Tanda Bayi Siap MPASI
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[
+            { icon: '🪑', text: 'Bisa duduk dengan bantuan dan mengontrol kepala' },
+            { icon: '🤲', text: 'Koordinasi tangan-mulut sudah berkembang' },
+            { icon: '👀', text: 'Tertarik melihat orang dewasa makan' },
+            { icon: '👅', text: 'Reflek dorongan lidah mulai berkurang' },
+            { icon: '🤤', text: 'Tidak kenyang meskipun ASI sudah cukup' },
+          ].map((sign) => (
+            <div class="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-300">
+              <span class="text-xl">{sign.icon}</span>
+              <span>{sign.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Bagian 2: Panduan Tekstur -->
+    <section id="bagian-3" class="mb-12 animate-on-scroll" aria-labelledby="section3-heading">
+      <div class="flex items-start gap-4 mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-brand-cta/20 flex items-center justify-center text-2xl flex-shrink-0">
+          🥣
+        </div>
+        <div>
+          <span class="text-xs font-bold text-brand-cta uppercase tracking-wide">Bagian 3</span>
+          <h2 class="font-display font-bold text-2xl text-brand-text dark:text-white" id="section3-heading">
+            Panduan Tekstur MPASI per Usia
+          </h2>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        {[
+          {
+            age: '6-7 Bulan',
+            texture: 'Puree Sangat Halus',
+            desc: 'Tekstur seperti yogurt lembut, bisa mengalir dari sendok. Saring atau blender hingga benar-benar halus tanpa gumpalan.',
+            examples: ['Puree wortel', 'Puree labu kuning', 'Puree kentang', 'Puree pisang'],
+            color: 'border-l-brand-highlight',
+          },
+          {
+            age: '8-9 Bulan',
+            texture: 'Puree Kasar / Mashed',
+            desc: 'Bertekstur lebih tebal, sedikit gumpalan halus. Bisa dilumat dengan lidah dan gusi bayi.',
+            examples: ['Bubur sumsum', 'Nasi tim lembek', 'Kentang lumat', 'Bubur ayam halus'],
+            color: 'border-l-brand-cta',
+          },
+          {
+            age: '9-12 Bulan',
+            texture: 'Finger Food & Cincang',
+            desc: 'Mulai bisa dipegang bayi. Potong kecil-kecil, tekstur bisa ditekan dengan jari namun tidak keras.',
+            examples: ['Potongan buah lunak', 'Nasi lembek', 'Telur orak-arik', 'Tofu kukus'],
+            color: 'border-l-sage-300',
+          },
+          {
+            age: '12-24 Bulan',
+            texture: 'Makanan Keluarga',
+            desc: 'Sudah bisa makan makanan yang sama dengan keluarga, dengan bumbu minimal garam dan gula.',
+            examples: ['Nasi biasa', 'Lauk keluarga', 'Sayur sop', 'Buah potong'],
+            color: 'border-l-purple-300',
+          },
+        ].map((stage, i) => (
+          <div
+            class={`bg-white dark:bg-gray-800 rounded-2xl p-5 border-l-4 ${stage.color} shadow-card animate-on-scroll`}
+            style={`animation-delay: ${i * 0.1}s`}
+          >
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <span class="font-display font-bold text-brand-text dark:text-white">{stage.age}</span>
+                <span class="ml-2 tag text-xs">{stage.texture}</span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">{stage.desc}</p>
+            <div class="flex flex-wrap gap-2">
+              {stage.examples.map((ex) => (
+                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2.5 py-1 rounded-lg">
+                  {ex}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Bagian: Mengatasi GTM -->
+    <section id="bagian-7" class="mb-12 animate-on-scroll" aria-labelledby="gtm-heading">
+      <div class="flex items-start gap-4 mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-2xl flex-shrink-0">
+          😤
+        </div>
+        <div>
+          <span class="text-xs font-bold text-brand-cta uppercase tracking-wide">Bagian 7</span>
+          <h2 class="font-display font-bold text-2xl text-brand-text dark:text-white" id="gtm-heading">
+            Strategi Mengatasi GTM (Gerakan Tutup Mulut)
+          </h2>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-6 border border-amber-200 dark:border-amber-700/30 mb-6">
+        <p class="text-amber-800 dark:text-amber-300 text-sm leading-relaxed">
+          <strong>💡 Ingat:</strong> GTM adalah fase normal yang dialami hampir semua bayi. 
+          Ini bukan kegagalan Ibu. Dengan strategi yang tepat, GTM bisa diatasi!
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {[
+          { icon: '🎨', title: 'Variasi Tampilan & Warna', desc: 'Sajikan makanan dengan tampilan menarik. Gunakan cetakan lucu, warna-warni alami dari sayuran.' },
+          { icon: '🪑', title: 'Posisi & Waktu Makan Tepat', desc: 'Jadwal makan teratur, posisi duduk nyaman di high chair, jauhkan distraksi gadget.' },
+          { icon: '👨‍👩‍👧', title: 'Makan Bersama Keluarga', desc: 'Bayi belajar dari meniru. Makan bersama mendorong bayi lebih mau mencoba makanan.' },
+          { icon: '🎮', title: 'Jadikan Makan Pengalaman Sensorik', desc: 'Biarkan bayi memegang, mengeksplorasi makanan. Bermain makanan bukan hal buruk!' },
+          { icon: '⏰', title: 'Division of Responsibility', desc: 'Ibu menyiapkan apa dan kapan makan. Bayi yang memutuskan berapa banyak yang dimakan.' },
+          { icon: '🚫', title: 'Hindari Memaksa Makan', desc: 'Memaksa makan menciptakan trauma dan memperburuk GTM. Tetap tenang dan positif.' },
+        ].map((tip, i) => (
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 flex gap-3">
+            <span class="text-2xl flex-shrink-0">{tip.icon}</span>
+            <div>
+              <h3 class="font-semibold text-sm text-brand-text dark:text-white mb-1">{tip.title}</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{tip.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- CTA ke Blog -->
+    <div class="text-center mt-12 p-8 bg-brand-card dark:bg-gray-800 rounded-3xl">
+      <h2 class="font-display font-bold text-xl text-brand-text dark:text-white mb-3">
+        Mau Lebih Banyak Panduan Detail?
+      </h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
+        Jelajahi ratusan artikel MPASI kami — resep, tips, ulasan produk, dan masih banyak lagi!
+      </p>
+      <a href="/blog" class="btn-primary">
+        📖 Baca Semua Artikel
+      </a>
+    </div>
+  </div>
+</Layout>

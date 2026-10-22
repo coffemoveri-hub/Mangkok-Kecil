@@ -1,0 +1,148 @@
+---
+// src/pages/tentang.astro
+// ============================================================
+// Halaman Tentang Kami - MangkokKecil
+// ============================================================
+
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Tentang Kami | MangkokKecil - Blog MPASI Terpercaya"
+  description="Kenali lebih dekat MangkokKecil, blog MPASI terpercaya untuk ibu muda Indonesia. Misi kami: menyediakan panduan MPASI berbasis riset WHO/IDAI yang mudah dipahami."
+>
+  <!-- Header -->
+  <div class="bg-gradient-to-b from-brand-card to-white dark:from-gray-800 dark:to-gray-900 pt-28 pb-16">
+    <div class="container-custom max-w-3xl text-center">
+      <div class="text-6xl mb-6 animate-bounce-soft">🥣</div>
+      <h1 class="section-title mb-4">Tentang <span class="text-gradient">MangkokKecil</span></h1>
+      <p class="section-subtitle">
+        Blog MPASI yang lahir dari hati seorang ibu, untuk semua ibu Indonesia.
+      </p>
+    </div>
+  </div>
+
+  <div class="container-custom max-w-4xl py-12 md:py-16">
+    
+    <!-- Cerita kami -->
+    <section class="mb-16 animate-on-scroll" aria-labelledby="story-heading">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <div>
+          <span class="tag bg-brand-highlight/20 text-teal-700 dark:text-teal-300 mb-4 inline-block">
+            💛 Cerita Kami
+          </span>
+          <h2 class="font-display font-bold text-2xl md:text-3xl text-brand-text dark:text-white mb-4" id="story-heading">
+            Dimulai dari Satu Pertanyaan Sederhana
+          </h2>
+          <div class="space-y-4 text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+            <p>
+              "Makanan apa yang paling baik untuk bayi saya yang baru 6 bulan?"
+            </p>
+            <p>
+              Pertanyaan itu membuat saya berselancar di internet selama berjam-jam — 
+              dan yang saya temukan adalah terlalu banyak informasi yang membingungkan, 
+              bahkan saling bertentangan.
+            </p>
+            <p>
+              <strong class="text-brand-text dark:text-white">MangkokKecil lahir dari rasa frustrasi itu.</strong> Kami percaya bahwa 
+              setiap ibu Indonesia berhak mendapatkan panduan MPASI yang 
+              <em>jelas, terpercaya, dan berbasis bukti ilmiah</em> — tanpa perlu 
+              gelar dokter untuk memahaminya.
+            </p>
+          </div>
+        </div>
+        
+        <!-- Visual card -->
+        <div class="bg-gradient-to-br from-brand-card to-brand-highlight/20 rounded-3xl p-8 text-center border border-brand-highlight/20">
+          <div class="text-7xl mb-4">👩‍👶</div>
+          <p class="font-display font-bold text-xl text-brand-text dark:text-white mb-2">
+            "Untuk semua ibu yang tidak pernah berhenti belajar demi si Kecil."
+          </p>
+          <p class="text-sm text-gray-500">— Tim MangkokKecil</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nilai kami -->
+    <section class="mb-16" aria-labelledby="values-heading">
+      <div class="text-center mb-10">
+        <h2 class="font-display font-bold text-2xl md:text-3xl text-brand-text dark:text-white" id="values-heading">
+          Nilai-Nilai yang Kami Pegang
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {[
+          {
+            icon: '🔬',
+            title: 'Berbasis Bukti Ilmiah',
+            desc: 'Setiap informasi yang kami sajikan mengacu pada panduan WHO, IDAI, dan penelitian terpercaya. Kami selalu mencantumkan sumber referensi.',
+          },
+          {
+            icon: '💚',
+            title: 'Empati & Non-Judgmental',
+            desc: 'Kami percaya tidak ada ibu yang sempurna. Setiap pilihan punya tantangannya masing-masing. Kami hadir tanpa menghakimi.',
+          },
+          {
+            icon: '🌍',
+            title: 'Relevan untuk Ibu Indonesia',
+            desc: 'Resep dan panduan kami menggunakan bahan lokal yang mudah ditemukan, mempertimbangkan budaya dan kondisi ibu Indonesia.',
+          },
+          {
+            icon: '📖',
+            title: 'Mudah Dipahami',
+            desc: 'Kami menyederhanakan bahasa ilmiah menjadi panduan praktis yang bisa langsung diterapkan oleh ibu mana pun.',
+          },
+        ].map((v, i) => (
+          <div
+            class="feature-card animate-on-scroll"
+            style={`animation-delay: ${i * 0.1}s`}
+          >
+            <div class="text-4xl mb-3">{v.icon}</div>
+            <h3 class="font-display font-bold text-lg text-brand-text dark:text-white mb-2">{v.title}</h3>
+            <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{v.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Statistik -->
+    <section class="mb-16 bg-gradient-to-r from-brand-card to-brand-highlight/20 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-8 md:p-12" aria-labelledby="stats-heading">
+      <h2 class="font-display font-bold text-xl text-brand-text dark:text-white text-center mb-8" id="stats-heading">
+        MangkokKecil dalam Angka
+      </h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        {[
+          { number: '100+', label: 'Artikel Dipublikasi' },
+          { number: '50K+', label: 'Ibu Terbantu' },
+          { number: '200+', label: 'Resep MPASI' },
+          { number: '★ 4.9', label: 'Rating Pembaca' },
+        ].map((stat) => (
+          <div>
+            <p class="font-display font-extrabold text-3xl md:text-4xl text-brand-cta mb-1">{stat.number}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Disclaimer medis -->
+    <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/30 rounded-2xl p-6 text-sm text-amber-800 dark:text-amber-300">
+      <p class="font-bold mb-1">⚠️ Disclaimer Penting:</p>
+      <p class="leading-relaxed">
+        Konten MangkokKecil bersifat informatif dan edukatif, bukan pengganti saran medis profesional. 
+        Selalu konsultasikan kondisi kesehatan dan kebutuhan gizi spesifik bayi Anda dengan dokter 
+        anak atau ahli gizi yang terpercaya.
+      </p>
+    </div>
+
+    <!-- CTA Kontak -->
+    <div class="text-center mt-12">
+      <h2 class="font-display font-bold text-xl text-brand-text dark:text-white mb-4">
+        Ada Pertanyaan atau Ingin Kolaborasi?
+      </h2>
+      <a href="/kontak" class="btn-primary">
+        📧 Hubungi Kami
+      </a>
+    </div>
+  </div>
+</Layout>

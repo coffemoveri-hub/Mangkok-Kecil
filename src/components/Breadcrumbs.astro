@@ -1,0 +1,86 @@
+---
+// src/components/Breadcrumbs.astro
+// ============================================================
+// Komponen Breadcrumbs untuk SEO dan navigasi pengguna
+// Membantu Google memahami struktur hierarki halaman
+// ============================================================
+
+interface BreadcrumbItem {
+  label: string;  // Teks yang ditampilkan
+  href?: string;  // URL (opsional untuk item terakhir)
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const SITE_URL = 'https://mangkokkecil.vercel.app';
+const SITE_NAME = 'MangkokKecil';
+
+// Buat JSON-LD schema untuk breadcrumbs
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    // Selalu mulai dengan homepage
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: SITE_NAME,
+      item: SITE_URL,
+    },
+    // Tambahkan item dari props
+    ...items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 2,
+      name: item.label,
+      ...(item.href ? { item: `${SITE_URL}${item.href}` } : {}),
+    })),
+  ],
+};
+---
+
+<!-- JSON-LD Breadcrumb Schema -->
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+<!-- Visual Breadcrumbs -->
+<nav aria-label="Breadcrumb" class="breadcrumb mb-6">
+  <!-- Home link -->
+  <a href="/" class="breadcrumb-item flex items-center gap-1 hover:text-brand-cta">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+    </svg>
+    <span class="hidden sm:inline">Home</span>
+  </a>
+
+  <!-- Breadcrumb items -->
+  {items.map((item, index) => (
+    <>
+      <!-- Separator -->
+      <span class="breadcrumb-sep" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        </svg>
+      </span>
+
+      <!-- Item (link jika ada href, teks biasa jika tidak) -->
+      {item.href ? (
+        <a
+          href={item.href}
+          class="breadcrumb-item"
+        >
+          {item.label}
+        </a>
+      ) : (
+        <span
+          class="text-brand-text dark:text-gray-200 font-medium truncate max-w-[200px] sm:max-w-xs"
+          aria-current="page"
+        >
+          {item.label}
+        </span>
+      )}
+    </>
+  ))}
+</nav>
